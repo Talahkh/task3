@@ -1,0 +1,23 @@
+name: Conditional Job Workflow
+
+on: [push]
+
+jobs:
+  job-one:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run First Job (Designed to Fail or Test)
+        run: |
+          echo "Running job 1..."
+          # Simulate a failure (change to 'exit 0' if you want it to succeed instead)
+          exit 1
+
+  job-two:
+    needs: job-one
+    # This ensures job 2 only runs if job-one explicitly fails
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Second Job (Executed on Failure)
+        run: |
+          echo "Job 1 failed! Running fallback job 2."
